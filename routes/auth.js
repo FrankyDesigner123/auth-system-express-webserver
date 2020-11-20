@@ -28,8 +28,15 @@ router.post('/register', validate, async (req, res) => {
 	// check if req passes the validation
 	const errors = validationResult(req);
 
+	// logic to check if there are errors (not passing validation)
 	if (!errors.isEmpty()) {
 		return res.status(422).json({ erros: errors.array() });
+	}
+
+	// check if userEmail exist
+	const userExist = await User.findOne({ email: req.body.email }); // check if email exist in database
+	if (userExist) {
+		return res.status(400).send('Email already exist.');
 	}
 
 	// create const of user and instance of this user model
