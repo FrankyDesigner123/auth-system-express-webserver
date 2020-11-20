@@ -11,6 +11,9 @@ const mongoose = require('mongoose');
 // init express app.
 const app = express();
 
+// pass the body of request (express.json() is middleware we pass)
+app.use(express.json());
+
 // import router
 const authRoutes = require('./routes/auth');
 
