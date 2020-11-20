@@ -1,7 +1,7 @@
 // set up express app
 const express = require('express');
 
-// init express app
+// init express app.
 const app = express();
 
 // import router
