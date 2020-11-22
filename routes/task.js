@@ -1,20 +1,40 @@
 // import express package
 const express = require('express');
 
-// import Task model
-const Task = require('../models/Task');
+// import components from express-validator
+const { check, validationResult } = require('express-validator');
 
 // init the router
 const router = express.Router();
 
+// import Task model
+const Task = require('../models/Task');
+
+// create task validation
+const validate = [
+	check('title').isLength({ min: 3 }).withMessage('A title is required.'),
+	check('course').isLength({ min: 3 }).withMessage('A Course is required'),
+	check('description')
+		.isLength({ min: 3 })
+		.withMessage('A description is required'),
+];
+
 // create Task Data
-router.post('/todo', async (req, res) => {
+router.post('/todo', validate, async (req, res) => {
+	// check if the req passes the validation
+	const errors = validationResult(req);
+	// logic to check if there are errors in validation
+	if (!errors.isEmpty()) {
+		return res.status(422).json({ errors: errors.array() });
+	}
+	// create const of task and instance of this task model
 	const task = new Task({
 		title: req.body.title,
 		course: req.body.course,
 		description: req.body.description,
 	});
 
+	// save the task
 	try {
 		const savedTask = await task.save();
 		res.send(savedTask);
