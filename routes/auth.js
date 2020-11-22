@@ -54,7 +54,9 @@ router.post('/register', registerValidation, async (req, res) => {
 	// check if userEmail exist
 	const userExist = await User.findOne({ email: req.body.email }); // check if email exist in database
 	if (userExist) {
-		return res.status(400).send('Email already exist.');
+		return res
+			.status(400)
+			.send({ success: false, message: 'Email already exist.' });
 	}
 
 	// create const of user and instance of this user model
@@ -71,13 +73,16 @@ router.post('/register', registerValidation, async (req, res) => {
 		const savedUser = await user.save();
 		// send back savedUser
 		res.send({
-			// not good to send back savedUser object where password is in, so we send the prop we want to show
-			id: savedUser._id,
-			fullName: savedUser.fullName,
-			email: savedUser.email,
+			success: true,
+			data: {
+				// not good to send back savedUser object where password is in, so we send the prop we want to show
+				id: savedUser._id,
+				fullName: savedUser.fullName,
+				email: savedUser.email,
+			},
 		});
 	} catch (error) {
-		res.status(400).send(error);
+		res.status(400).send({ success: false, error });
 	}
 });
 
@@ -95,15 +100,32 @@ router.post('/login', loginValidation, async (req, res) => {
 	const user = await User.findOne({ email: req.body.email });
 
 	if (!user) {
-		return res.status(404).send('User is not registered.');
+		return res
+			.status(404)
+			.send({ success: false, message: 'User is not registered.' });
 	}
 	// check if password correct
 	const validPassword = await bcrypt.compare(req.body.password, user.password);
 
 	if (!validPassword) {
-		return res.status(404).send('Invalid Email or Password');
+		return res
+			.status(404)
+			.send({ success: false, message: 'Invalid Email or Password.' });
 	}
-	return res.send('Logged in ...');
+	return res.send({ success: true, message: 'Logged in ...' });
+});
+
+// get user profile
+router.use('/profile/:id', (req, res) => {
+	const userId = req.params.id;
+	console.log(userId);
+
+	User.findById(userId)
+		.then((user) => {
+			res.send(user);
+			console.log(user);
+		})
+		.catch((err) => console.log(err));
 });
 
 // export router
