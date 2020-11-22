@@ -14,8 +14,11 @@ const app = express();
 // pass the body of request (express.json() is middleware we pass)
 app.use(express.json());
 
-// import router
+// import Auth router
 const authRoutes = require('./routes/auth');
+
+// import Task router
+const taskRoutes = require('./routes/task');
 
 // import middleware
 const verifyToken = require('./routes/verifyToken');
@@ -33,6 +36,8 @@ app.get('/api/users/profile', verifyToken, (req, res) => {
 // use middleware
 // when users makes a req to api/users, we want the req to be handle by authRoutes
 app.use('/api/users/', authRoutes);
+// when user makes any req to api/tasks, we want the req to be handle by taskRoutes
+app.use('/api/tasks/', taskRoutes);
 
 // use mongoose to connect to mongoDB
 mongoose
