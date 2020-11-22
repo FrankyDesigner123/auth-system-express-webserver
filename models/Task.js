@@ -16,3 +16,6 @@ const TaskSchema = new mongoose.Schema({
 		String,
 	},
 });
+
+// when we want to interact with this database we can create an instance of this Schema
+module.exports = mongoose.model('Task', TaskSchema);
