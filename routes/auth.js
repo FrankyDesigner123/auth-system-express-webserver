@@ -7,6 +7,9 @@ const { check, validationResult } = require('express-validator');
 // import bcrypt
 const bcrypt = require('bcryptjs');
 
+// import jsonwebstoken
+const jwt = require('jsonwebtoken');
+
 // init express.Router
 const router = express.Router();
 
@@ -113,7 +116,20 @@ router.post('/login', loginValidation, async (req, res) => {
 			.status(404)
 			.send({ success: false, message: 'Invalid Email or Password.' });
 	}
-	return res.send({ success: true, message: 'Logged in ...' });
+
+	// create and assign a token
+	const token = jwt.sign(
+		{
+			_id: user._id,
+			email: user.email,
+			role: user.role,
+		},
+		'SECRET_KEY'
+	);
+	res
+		.header('auth-token', token)
+		.send({ success: true, message: 'Logged in ...', token });
+	// return res.send({ success: true, message: 'Logged in ...' });
 });
 
 // get user profile
