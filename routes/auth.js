@@ -119,16 +119,19 @@ router.post('/login', loginValidation, async (req, res) => {
 
 	// create and assign a token
 	const token = jwt.sign(
+		// payload
 		{
 			_id: user._id,
 			email: user.email,
 			role: user.role,
 		},
+		// this is the key for encoding the token
 		'SECRET_KEY'
 	);
+	// send back to the user
 	res
-		.header('auth-token', token)
-		.send({ success: true, message: 'Logged in ...', token });
+		.header('auth-token', token) // attach token in the header
+		.send({ success: true, message: 'Logged in ...', token }); // send token to body of response
 	// return res.send({ success: true, message: 'Logged in ...' });
 });
 

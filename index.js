@@ -17,9 +17,17 @@ app.use(express.json());
 // import router
 const authRoutes = require('./routes/auth');
 
+// import middleware
+const verifyToken = require('./routes/verifyToken');
+
 // create first route
 app.get('/', (req, res) => {
 	res.send('Welcome to the auth system');
+});
+
+// create route to check profile
+app.get('/api/users/profile', verifyToken, (req, res) => {
+	res.send('This is the user profile');
 });
 
 // use middleware
