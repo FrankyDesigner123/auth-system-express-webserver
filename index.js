@@ -27,7 +27,7 @@ app.get('/', (req, res) => {
 
 // create route to check profile
 app.get('/api/users/profile', verifyToken, (req, res) => {
-	res.send('This is the user profile');
+	res.send({ success: true, data: req.user });
 });
 
 // use middleware

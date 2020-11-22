@@ -29,6 +29,21 @@ const registerValidation = [
 		.withMessage('Password must be at least 6 characters.'),
 ];
 
+// function generate Token
+const generateToken = (user) => {
+	return jwt.sign(
+		// payload
+		{
+			_id: user._id,
+			email: user.email,
+			role: user.role,
+			fullName: user.fullName,
+		},
+		// this is the key for encoding the token
+		'SECRET_KEY'
+	);
+};
+
 // create login validation
 const loginValidation = [
 	// define validation
@@ -74,6 +89,10 @@ router.post('/register', registerValidation, async (req, res) => {
 	// save the user
 	try {
 		const savedUser = await user.save();
+
+		// create and assign a token
+		const token = generateToken(user);
+
 		// send back savedUser
 		res.send({
 			success: true,
@@ -84,6 +103,7 @@ router.post('/register', registerValidation, async (req, res) => {
 				email: savedUser.email,
 				role: savedUser.role,
 			},
+			token,
 		});
 	} catch (error) {
 		res.status(400).send({ success: false, error });
@@ -118,21 +138,11 @@ router.post('/login', loginValidation, async (req, res) => {
 	}
 
 	// create and assign a token
-	const token = jwt.sign(
-		// payload
-		{
-			_id: user._id,
-			email: user.email,
-			role: user.role,
-		},
-		// this is the key for encoding the token
-		'SECRET_KEY'
-	);
+	const token = generateToken(user);
 	// send back to the user
 	res
 		.header('auth-token', token) // attach token in the header
 		.send({ success: true, message: 'Logged in ...', token }); // send token to body of response
-	// return res.send({ success: true, message: 'Logged in ...' });
 });
 
 // get user profile
