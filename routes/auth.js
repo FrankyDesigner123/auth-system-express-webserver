@@ -65,7 +65,7 @@ router.post('/register', registerValidation, async (req, res) => {
 		fullName: req.body.fullName,
 		email: req.body.email,
 		password: hashPassword,
-		role: req.body.role,
+		role: req.body.role.default,
 	});
 
 	// save the user
@@ -79,6 +79,7 @@ router.post('/register', registerValidation, async (req, res) => {
 				id: savedUser._id,
 				fullName: savedUser.fullName,
 				email: savedUser.email,
+				role: savedUser.role,
 			},
 		});
 	} catch (error) {
