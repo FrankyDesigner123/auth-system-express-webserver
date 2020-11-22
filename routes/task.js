@@ -37,10 +37,33 @@ router.post('/todo', validate, async (req, res) => {
 	// save the task
 	try {
 		const savedTask = await task.save();
-		res.send(savedTask);
+		res.send({
+			message: 'Task created succesfully.',
+			data: savedTask,
+		});
 	} catch (error) {
 		res.status(400).send(error);
 	}
+});
+
+// fetch Task data
+router.get('/', (req, res) => {
+	Task.find()
+		.then((tasks) => {
+			res.send(tasks);
+		})
+		.catch((err) => console.log(err));
+});
+
+// fetch Task per ID
+router.get('/:id', (req, res) => {
+	const taskId = req.params.id;
+
+	Task.findById(taskId)
+		.then((task) => {
+			res.send(task);
+		})
+		.catch((err) => console.log(err));
 });
 
 // we need to export it so we can make use of it in index.js
