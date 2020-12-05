@@ -47,6 +47,6 @@ mongoose
 	)
 	.then(() => {
 		// define the port
-		app.listen(3000, () => console.log('Server is running.'));
+		app.listen(5000, () => console.log('Server is running.'));
 	})
 	.catch((err) => console.log(err));
