@@ -53,7 +53,7 @@ const Login = (props) => {
 				<input type="submit" className="btn btn-primary" value="Register" />
 			</form>
 			<p className="my-1">
-				Already have an account? <Link to="/register">Register</Link>
+				Don't have account? <Link to="/register">Register</Link>
 			</p>
 		</Fragment>
 	);
