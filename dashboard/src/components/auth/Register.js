@@ -1,4 +1,5 @@
 import React, { Fragment, useState } from 'react';
+import axios from 'axios';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 
@@ -11,13 +12,14 @@ const Register = (props) => {
 		role: 'user',
 	});
 
-	const { fullName, email, password, role } = formData;
+	const { fullName, email, password } = formData;
 
 	// onChange function to take input value from useState hook
 	const onChange = (e) =>
 		setFormData({ ...formData, [e.target.name]: e.target.value });
 
-	const onSubmit = (e) => {
+	// onSubmit function to send data
+	const onSubmit = async (e) => {
 		e.preventDefault();
 		console.log(formData);
 	};
