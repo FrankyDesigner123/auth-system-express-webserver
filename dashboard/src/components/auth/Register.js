@@ -1,12 +1,13 @@
 import React, { Fragment, useState } from 'react';
-import axios from 'axios';
+
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 
 import { setAlert } from '../../actions/alert';
+import { register } from '../../actions/auth';
 
-const Register = ({ setAlert }) => {
+const Register = ({ setAlert, register }) => {
 	// useState hook to change input onChange
 	const [formData, setFormData] = useState({
 		fullName: '',
@@ -15,7 +16,7 @@ const Register = ({ setAlert }) => {
 		role: 'user',
 	});
 
-	const { fullName, email, password } = formData;
+	const { fullName, email, password, role } = formData;
 
 	// onChange function to take input value from useState hook
 	const onChange = (e) =>
@@ -24,8 +25,11 @@ const Register = ({ setAlert }) => {
 	// onSubmit function to send data
 	const onSubmit = async (e) => {
 		e.preventDefault();
-		setAlert('User has been succesfully registered.', 'success');
-		console.log(formData);
+		if (register({ fullName, email, password, role })) {
+			setAlert('User has been succesfully registered.', 'success');
+		} else {
+			setAlert('User has been succesfully registered.', 'danger');
+		}
 	};
 
 	return (
@@ -77,6 +81,7 @@ const Register = ({ setAlert }) => {
 
 Register.propTypes = {
 	setAlert: PropTypes.func.isRequired,
+	register: PropTypes.func.isRequired,
 };
 
-export default connect(null, { setAlert })(Register);
+export default connect(null, { setAlert, register })(Register);
